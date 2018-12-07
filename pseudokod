@@ -1,0 +1,94 @@
+//ARTIFICIAL BEE COLONY ALGORITHM for single machine schediling problem with sequence-dependant setup times
+
+ABC ( N, treshold, limit, alpha, Gmax, Gnon-improving ){
+
+	//inicijaliziramo početnu populaciju (nasumično)
+	//tj., u našem okruženju, nasumično odaberemo N rasporeda poslova (početna populacija)
+	Pop=( Q1, Q2, ..., QN )
+
+
+	//inicijaliziramo dvije pomoćne varijable
+	//jednu, G, za pamćenje koliko puta smo izgenerirali nova rješenja iz prethodnih 
+	//( mora biti u svakoj iteraciji manja od nekog predodređenog konstantnog Gmax )
+	//drugu, Gnon, za pamćenje koliko puta se za redom (koliko iteracija se izvrtilo) 
+	//najbolje riješenje (raspored) Q* nije poboljšalo
+	G=0 
+	Gnon=0
+
+	//ovdje izračunamo TARDINESS za svaki raspored Qi
+
+
+
+
+
+	// --- MAIN LOOP ---
+
+	while( G <= Gmax and Gnon <= Gnon-improving ){
+		
+		//povećavamo broj G jer nam on označava ukupan broj iteracija 
+		G = G+1;
+		//povećavamo broj Gnon jer nam on označava u koliko iteracija za redom se najbolji raspored Q* nije izmjenio
+		//ako na kraju izmjenimo Q* postaviti ćemo ponovno Gnon na 0
+		Gnon= Gnon +1;
+
+
+	//postavimo EMPLOYED BEES na izvore hrane
+	//odnosnno, u našem slučaju, provjeravamo sve početne N rasporede i poboljšavamo ih
+
+	for ( i=1,2,...,N ){
+
+		//određujemo-poboljšavamo svako riješenje/raspored Qi -> Qi,new
+		//to radimo sa OX(order crossover) ili IG( Qi, alpha )
+		//možemo probati i s nekim drugim križanjem, npr. EDGE CROSSOVER
+		// IG( Qi, alpha ) je postupak stvaranja i uništavanja - stvaranje susjedstva 
+
+		if( ( ( TT(Qi,new0)-TT(Q*) ) / TT(Qi,new) ) < treshold or TT( Qi,new ) <= TT(Q*) ) then preform LS
+		//LS -local search
+		//za svaki i (=1,2,...N-1) i svaki j (=2,3,...N; j>i) mijenjamo poredak i & j 
+		//te gledamo TT od dobivenih rasporeda 
+		//ako dobijemo raspored s manjim TT update-amo raspored
+		if( TT( Qi,new ) <= TT( Qi) ) then zamjeni Qi sa Qi,new
+
+	}	
+	
+
+	//postavljamo ONLOOK BEES na izvore hrane ovisno o količini nektara
+	for ( i=1,2,...,N ){
+
+		//odabiremo izvor hrane -  rješenje/raspored Qi s vjerojatnošću pi
+		pi = TT(Qi)/ ( sum(k=1, k=N) TT(Qk) )
+
+		//određujemo-poboljšavamo svako riješenje/raspored Qi -> Qi,new
+		//to radimo pomoću IG( Qi, alpha )
+		if( ( ( TT(Qi,new0)-TT(Q*) )/TT(Qi,new) ) < treshold or TT( Qi,new ) <= TT(Q*) ) then preform LS
+		if( TT( Qi,new ) <= TT( Qi) ) then zamjeni Qi sa Qi,new
+
+	}
+
+	
+	//postavljamo SCOUTS BEES da nađu nova rješenja
+	for ( i=1,2,...,N ){
+		if ( izvor hrane Qi se nije promjenio u vremenu 'limit' ) then regeneriraj Qi nasumično			
+	}
+
+	
+	//zapamtimo najbolje rješenje Q*
+
+
+	//update-amo najbolje rješenje, ako se može /ima s kim/ update-ati
+	for ( i=1,2,...,N ){
+		if( TT( Qi,new) <= TT( Q* ) ){
+			Q*=Qi,new
+			Gnon=0
+		}
+	}
+
+	//kraj jedne iteracije u glavnoj petlji
+	}
+
+	//---END OF MAIN LOOP---
+
+
+
+	//ispišemo rješenje Q*
+}
